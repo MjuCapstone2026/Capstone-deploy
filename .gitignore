@@ -2,3 +2,4 @@
 backend.env
 ai.env
 !*.env.example
+.idea/
