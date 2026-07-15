@@ -1,6 +1,42 @@
-# 🚀 MJU Travel AI Agent - 배포 가이드
+# 🚀 마실 (Masil) - 배포 가이드
 
-전체 서비스(Frontend, Backend, AI)를 Docker로 한번에 실행하는 배포 레포지토리입니다.
+> **대화형 실시간 정보 기반 여행 일정 생성 및 예약 서비스**
+
+**마실**은 정적이고 파편화된 기존 여행 정보 서비스의 한계와 생성형 AI의 환각(Hallucination) 문제를 극복하기 위한 서비스로, 정보 탐색부터 일정 계획, 실제 예약까지 하나의 대화형 인터페이스 안에서 끝맺는 것을 목표로 합니다.
+
+이 레포는 마실을 구성하는 3개 서비스(Frontend, Backend, AI)를 Docker Compose로 한번에 묶어 실행하기 위한 **배포 구성 레포지토리**입니다. EC2 배포를 염두에 두고 작성되었으나, 실제로는 **로컬 환경에서 `docker compose up`으로 통합 실행만 검증**했고 EC2에 올려서 운영해본 적은 없습니다. 아래 EC2 관련 절차는 검증되지 않은 가이드로 참고하세요.
+
+---
+
+## 🏗 시스템 아키텍처
+
+```mermaid
+graph LR
+    User[📱 사용자] --> FE["Capstone-frontend<br/>React Native / Expo"]
+    FE --> BE["Capstone-backend<br/>Spring Boot"]
+    BE <--> AI["Capstone-ai<br/>FastAPI + pydantic-ai"]
+    BE --> DB[(PostgreSQL)]
+    BE --> Redis[(Redis)]
+    subgraph "Capstone-deploy (이 레포)"
+        Compose["docker-compose.yml"]
+    end
+    Compose -. 빌드/실행 .-> FE
+    Compose -. 빌드/실행 .-> BE
+    Compose -. 빌드/실행 .-> AI
+```
+
+---
+
+## 👥 팀 (4조 · 여울)
+
+명지대학교 컴퓨터공학전공 캡스톤디자인 (지도교수: 안희철)
+
+| | 역할 | 이름 | GitHub |
+| :---: | :--- | :--- | :--- |
+| <img src="https://github.com/thisisjihoo.png" width="120" height="120"> | 팀장 | 박지후 | [@thisisjihoo](https://github.com/thisisjihoo) |
+| <img src="https://github.com/Chaehyunli.png" width="120" height="120"> | 팀원 | 임채현 | [@Chaehyunli](https://github.com/Chaehyunli) |
+| <img src="https://github.com/hanseul377.png" width="120" height="120"> | 팀원 | 김한슬 | [@hanseul377](https://github.com/hanseul377) |
+| <img src="https://github.com/DOOYEE0709.png" width="120" height="120"> | 팀원 | 남서현 | [@DOOYEE0709](https://github.com/DOOYEE0709) |
 
 ---
 
@@ -192,3 +228,14 @@ docker compose up --build -d
 sudo lsof -i :8080
 sudo kill -9 <PID>
 ```
+
+---
+
+## 🔗 관련 레포
+
+| 레포 | 설명 |
+| :--- | :--- |
+| [Capstone-frontend](https://github.com/MjuCapstone2026/Capstone-frontend) | 모바일 앱 (React Native / Expo) |
+| [Capstone-backend](https://github.com/MjuCapstone2026/Capstone-backend) | 메인 API 서버 (Spring Boot) |
+| [Capstone-ai](https://github.com/MjuCapstone2026/Capstone-ai) | AI 에이전트 서버 (FastAPI) |
+| [MjuCapstone2026](https://github.com/MjuCapstone2026) | 조직 홈 |
